@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace CQG_SpellChecker
 {
@@ -8,6 +9,7 @@ namespace CQG_SpellChecker
         public static List<string> Dictinary = new List<string>();
         public static List<string> WrongWords = new List<string>();
         public static List<string> Result = new List<string>();
+        public static List<string> outputWords = new List<string>();
 
         static void Main(string[] args)
         {
@@ -48,23 +50,44 @@ namespace CQG_SpellChecker
         public static string WordFixer(string s)
         {
             int Moves;
-            int comparesLetters = 0;
+            int comparesLetters = 0; //Совподающие буквы
+            int LettersEdits = 0;
 
-            foreach(var x in Dictinary)
+            outputWords.Clear();
+            
+            foreach (var word in Dictinary) //Сверяем каждое слово с словом из словаря
             {
-                for(int i = 0; i < s.Length; i++)
+                for (int i = 0; i < s.Length; i++)
                 {
-                    if (x.Contains(s[i]))
+                    if (i < s.Length - 1 && i < word.Length)
                     {
-                        comparesLetters++;
-                    }
-                    if(x.Length - 1 < s.Length && s.Length < x.Length + 1 && i == s.Length - 1 && comparesLetters >= s.Length - 2)
-                    {
-                        return x;
+                        if (LettersEdits == 0 && word[i] == s[i]) 
+                        {
+                            comparesLetters++;
+                        }
+                        else if (LettersEdits == 1 && word[i] == s[i + 1])
+                        {
+                            comparesLetters++;
+                        }
+                        else
+                        {
+                            LettersEdits++;
+                        }
+
+                        if (LettersEdits > 2)
+                        {
+                            
+                        }
+                        if (i == s.Length - 1 /* && comparesLetters >= s.Length - 2 && LettersEdits <= 2 */)
+                        {
+                            return word;
+                        }
                     }
                 }
-            }
-            return $"{{{s}}}";
+                LettersEdits = 0;
+                comparesLetters = 0; //Обнуляем счетчик
+            }   
+            return $"{{{s}?}}";
         }
     }
 }
