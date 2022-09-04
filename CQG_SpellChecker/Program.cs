@@ -13,7 +13,7 @@ namespace CQG_SpellChecker
 
         static void Main(string[] args)
         {
-            string input = "rain spain plain plaint pain main mainly the in on fall falls his was === hte rame in pain fells mainy oon teh lain was hints pliant ===";
+            string input = "the rain spain plain plaint pain main mainly  in on fall falls his was === hte rame in pain fells mainy oon teh lain was hints pliant ===";
 
             int counter = 0;
             var inputArray = input.Split(" ");
@@ -59,13 +59,13 @@ namespace CQG_SpellChecker
             {
                 for (int i = 0; i < s.Length; i++)
                 {
-                    if (i < s.Length - 1 && i < word.Length)
+                    if (i < s.Length && i < word.Length)
                     {
                         if (LettersEdits == 0 && word[i] == s[i]) 
                         {
                             comparesLetters++;
                         }
-                        else if (LettersEdits == 1 && word[i] == s[i + 1])
+                        else if (LettersEdits == 1 && word[i - 1] == s[i])
                         {
                             comparesLetters++;
                         }
