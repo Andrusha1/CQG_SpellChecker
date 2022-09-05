@@ -83,7 +83,7 @@ namespace CQG_SpellChecker.Operations
                 }
                 else //Если слова нет в словаре вызываем проверку слова
                 {
-                    storage.ResultAdd(WordFixerOperation.WordFix(WordStorages.WrongWords[i]));
+                    storage.ResultAdd(WordFixerOperation.WordFix(WordStorages.WrongWords[i].ToLower()));
                 }
             }
 
@@ -97,6 +97,7 @@ namespace CQG_SpellChecker.Operations
             {
                 writer.WriteLine(output);
             }
+            Console.WriteLine("Готовый текст содержится в файле \"Result.txt\"");
         }
     }
 }
