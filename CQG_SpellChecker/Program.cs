@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace CQG_SpellChecker
 {
@@ -13,7 +14,7 @@ namespace CQG_SpellChecker
 
         static void Main(string[] args)
         {
-            string input = "the rain spain plain plaint pain main mainly  in on fall falls his was === hte rame in pain fells mainy oon teh lain was hints pliant ===";
+            string input = "rain spain plain plaint pain mainly main the in on fall falls his was === hte rame in pain fells mainy oon teh lain was hints pliant ===";
 
             int counter = 0;
             var inputArray = input.Split(" ");
@@ -29,7 +30,9 @@ namespace CQG_SpellChecker
                 counter++;
             }
 
-            for (int i = 0; i < WrongWords.Count - 1; i++)
+            
+
+            for (int i = 0; i < WrongWords.Count; i++)
             {
                 if (Dictinary.Contains(WrongWords[i]))
                 {
@@ -49,23 +52,95 @@ namespace CQG_SpellChecker
 
         public static string WordFixer(string s)
         {
-            int Moves;
-            int comparesLetters = 0; //Совподающие буквы
-            int LettersEdits = 0;
+            string longestWord;
+            string shortestWord;
+            int differentLetters = 0;
+            List<string> variants = new List<string>();
+            List<int> WrongLetters = new List<int>();
 
             outputWords.Clear();
-            
+
             foreach (var word in Dictinary) //Сверяем каждое слово с словом из словаря
             {
-                for (int i = 0; i < s.Length; i++)
+                if (word.Length > s.Length)
                 {
-                    if (i < s.Length && i < word.Length)
+                    longestWord = word;
+                    shortestWord = s;
+                }
+                else
+                {
+                    longestWord = s;
+                    shortestWord = word;
+                }
+
+                string result = longestWord.Trim(shortestWord.ToCharArray());
+                if (!shortestWord.Contains(result) && longestWord.Length == shortestWord.Length)
+                {
+                    differentLetters += 2;
+                }
+                else
+                {
+                    differentLetters += result.Length;
+                }
+
+                if(result.Length == 0)
+                {
+                    for(int i = 0; i <= shortestWord.Length - 1; i++)
                     {
-                        if (LettersEdits == 0 && word[i] == s[i]) 
+                        if(shortestWord[i] != longestWord[i] && differentLetters <= 2)
+                        {
+                            differentLetters++;
+                        }
+                        if (differentLetters > 2)
+                        {
+                            return $"{{{s}?}}";
+                        }
+                    }
+                }
+
+                if (result.Length < 2 && differentLetters <= 2)
+                {
+                    variants.Add(word);
+                    WrongLetters.Add(differentLetters);
+                }
+
+                differentLetters = 0;
+            }
+
+            if (variants.Count == 1)
+            {
+                return variants[0];
+            }
+            else if (variants.Count > 1)
+            {
+                string result = "";
+                int resultsCount = 0;
+                for(int j = 0; j < variants.Count; j++)
+                {
+                    if(WrongLetters.Min() == WrongLetters[j])
+                    {
+                        resultsCount++;
+                        result += variants[j] + " ";
+                    }
+                    if(j == variants.Count - 1 && resultsCount == 1)
+                    {
+                        return result;
+                    }
+                }
+                result = result.Substring(0, result.Length - 1);
+                return $"{{{result}}}";
+            }
+            return $"{{{s}?}}";
+        }
+    }
+}
+
+/*
+if (LettersEdits == 0 && word[i] == s[i]) 
                         {
                             comparesLetters++;
                         }
-                        else if (LettersEdits == 1 && word[i - 1] == s[i])
+                        else if (LettersEdits == 1 && (word[i - 1] == s[i] || word[i] == s[i] || s[i-1] == word[i]))
                         {
                             comparesLetters++;
                         }
@@ -74,21 +149,22 @@ namespace CQG_SpellChecker
                             LettersEdits++;
                         }
 
-                        if (LettersEdits > 2)
+                        if (i == s.Length - 1 && word.Length > s.Length)
                         {
-                            
+                            LettersEdits += word.Length - s.Length;
                         }
-                        if (i == s.Length - 1 /* && comparesLetters >= s.Length - 2 && LettersEdits <= 2 */)
+                        if (i == word.Length - 1 && s.Length > word.Length)
                         {
-                            return word;
+                            LettersEdits += s.Length - word.Length;
                         }
-                    }
-                }
-                LettersEdits = 0;
-                comparesLetters = 0; //Обнуляем счетчик
-            }   
-            return $"{{{s}?}}";
-        }
-    }
-}
 
+if (LettersEdits > 2)
+{
+    break;
+}
+if (i == s.Length - 1 && comparesLetters > s.Length - 2 && LettersEdits <= 2)
+{
+    variants.Add(word);
+    WrongLetters.Add(LettersEdits);
+}
+*/
