@@ -3,6 +3,7 @@
 Your goal is to implement a spelling checker. You should correct words by finding words in the dictionary that are no more than two edits away from the input.
 
 Here, an edit is either:
+
 • Inserting a single letter, or
 
 • Deleting a single letter
